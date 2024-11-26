@@ -1,55 +1,92 @@
+import { Network } from 'bitcoinjs-lib';
+export interface NetworkConfig {
+    network: 'mainnet' | 'testnet';
+    apiBaseUrl: string;
+}
 export interface UTXO {
     txid: string;
     vout: number;
     value: number;
-    address: string;
     scriptPubKey: string;
-    confirmations?: number;
-    witnessUtxo?: {
-        script: Buffer;
-        value: number;
-    };
+    isInscription?: boolean;
+    inscriptionId?: string;
+    isRune?: boolean;
+    runeId?: string;
 }
-export interface TransactionInput {
-    hash: string;
-    index: number;
-    witnessUtxo: {
-        script: Buffer;
-        value: number;
-    };
-}
-export interface TransactionOutput {
-    address: string;
-    value: number;
+export interface RuneTransfer {
+    runeId: string;
+    amount: number;
+    destinationAddress: string;
 }
 export interface TransactionResult {
     txHex: string;
     txId: string;
     fee: number;
+    runeTransfer?: {
+        runeId: string;
+        amount: number;
+        from: string;
+        to: string;
+    };
+    stampData?: {
+        content: string;
+        contentType: string;
+        timestamp: number;
+    };
+}
+export interface StampData {
+    content: string;
+    contentType: string;
+    additionalMetadata?: Record<string, any>;
+}
+export interface XCPTransfer {
+    asset: string;
+    amount: number;
+    destinationAddress: string;
+    memo?: string;
 }
 export interface InscriptionTransfer {
     inscriptionId: string;
-    inscriptionUtxo: UTXO;
+    destinationAddress: string;
+    inscriptionUtxo?: UTXO;
+}
+export interface RuneTransfer {
+    runeId: string;
+    amount: number;
     destinationAddress: string;
 }
-export interface NetworkConfig {
-    network: 'mainnet' | 'testnet';
-    addressType: 'p2wpkh' | 'p2tr';
-    apiBaseUrl: string;
+export interface TransactionInputs {
+    fromAddress: string;
+    toAddress: string;
+    amount: number;
+    privateKey: string;
+    network: Network;
+}
+export interface InscriptionTransferInputs {
+    fromAddress: string;
+    destinationAddress: string;
+    inscriptionId: string;
+    privateKey: string;
+    network: Network;
+}
+export interface StampTransactionInputs {
+    fromAddress: string;
+    stampData: StampData;
+    privateKey: string;
+    network: Network;
+}
+export interface XCPTransactionInputs {
+    fromAddress: string;
+    xcpTransfer: XCPTransfer;
+    privateKey: string;
+    network: Network;
 }
 export interface FeeRates {
     fastestFee: number;
     halfHourFee: number;
     hourFee: number;
-    minimumFee: number;
 }
-export interface KeyPairInfo {
-    privateKey: string;
-    publicKey: string;
-    wif: string;
-    address: string;
-}
-export interface SignedTransaction {
-    txHex: string;
-    txId: string;
+export interface ValidationResult {
+    isValid: boolean;
+    error?: string;
 }
